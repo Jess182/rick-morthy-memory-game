@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Memory</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet"
+        type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@^4.0.0/animate.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/quasar@2.0.0-beta.12/dist/quasar.prod.css" rel="stylesheet"
+        type="text/css">
+    <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+
+<body>
+    <div id="q-app">
+        <q-layout view="hHh lpR fFf">
+
+            <q-page-container>
+
+                <q-dialog v-model="prompt" persistent @before-hide="getCharacters" @update:model-value="validateName">
+                    <q-card style="min-width: 350px">
+                        <q-card-section>
+                            <div class="text-h6">Name</div>
+                            <q-input dense v-model="name" autofocus lazy-rules
+                                :rules="[ val => val && val.trim().length > 0 || 'Please type name']"></q-input>
+                        </q-card-section>
+
+                        <q-card-section>
+                            <div class="text-h6">Select grid</div>
+
+                            <q-option-group v-model="grid" :options="grids" color="primary"></q-option-group>
+                        </q-card-section>
+
+                        <q-card-actions align="right" class="text-primary">
+                            <q-btn flat label="Start" v-close-popup></q-btn>
+                        </q-card-actions>
+                    </q-card>
+                </q-dialog>
+
+                <div class="container row flex-center">
+                    <div class="cards col-10 row q-gutter-md flex-center">
+                        <transition-group appear enter-active-class="animate__animated animate__flip"
+                            leave-active-class="animate__animated animate__flip">
+                            <q-card v-for="(item, idx) in characters" :key="idx" class="custom-card col-3"
+                                :data-id="item.id" @click="flipCard">
+                                <q-img :src="item.image"> </q-img>
+                            </q-card>
+                        </transition-group>
+                    </div>
+                </div>
+
+            </q-page-container>
+
+        </q-layout>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar@2.0.0-beta.12/dist/quasar.umd.prod.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

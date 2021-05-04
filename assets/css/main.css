@@ -1,0 +1,25 @@
+/* ###### Vue ##### */
+
+[v-cloak] { display: none; }
+
+
+/* ###### Quasar ##### */
+
+body.body--dark {
+    background: #22272e;
+}
+
+
+/* ###### Custom classes ##### */
+
+.container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.custom-card {
+    width: 20vh !important;
+}
