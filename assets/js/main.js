@@ -1,7 +1,8 @@
 const {
     createApp,
     ref,
-    reactive
+    reactive,
+    watch
 } = Vue;
 
 
@@ -23,6 +24,7 @@ const app = createApp({
         ];
         let selectedItems = [];
         const excludedNames = [];
+        let timerId = null;
 
         const prompt = ref(true);
         const name = ref('');
@@ -32,9 +34,16 @@ const app = createApp({
         const characters = ref([]);
 
 
+        watch(count, (currentValue, oldValue) => {
+            if (currentValue == grid.value) {
+                clearInterval(timerId);
+            }
+        });
+
         const validateName = value => {
             if (!value && name.value.trim().length == 0) prompt.value = true;
-        }
+        };
+
 
         const getRndIds = length => {
             const max = 672;
@@ -72,7 +81,9 @@ const app = createApp({
             const result = await response.json();
 
             characters.value = [...result.data.charactersByIds, ...result.data.charactersByIds]
-                .sort(() => .5 - Math.random());;
+                .sort(() => .5 - Math.random());
+
+            timerId = setInterval(() => time.value++, 1000)
         };
 
         const flipCard = event => {
