@@ -1,16 +1,12 @@
 const {
     createApp,
-    ref
+    ref,
+    reactive
 } = Vue;
 
 
 const app = createApp({
     setup() {
-        const prompt = ref(true);
-        const name = ref('');
-        const grid = ref('8');
-        let characters = ref([]);
-
         const grids = [
             {
                 label: '4 x 4',
@@ -26,11 +22,18 @@ const app = createApp({
             }
         ];
 
-        const validateName = (value) => {
+        const prompt = ref(true);
+        const name = ref('');
+        const grid = ref('8');
+        const characters = ref([]);
+        const selectedItems = ref([]);
+
+
+        const validateName = value => {
             if (!value && name.value.trim().length == 0) prompt.value = true;
         }
 
-        const getRndIds = (length) => {
+        const getRndIds = length => {
             const max = 672;
             const min = 1;
             const ids = [];
@@ -69,13 +72,34 @@ const app = createApp({
                 .sort(() => .5 - Math.random());;
         };
 
-        const flipCard = (event) => {
+        const flipCard = event => {
             const element = event.target;
-            element.classList.add('animate__animated', 'animate__flip');
+            const img = element.closest('.img');
 
-            element.addEventListener('animationend', () => {
-                element.classList.remove('animate__animated', 'animate__flip');
-            });
+            if (selectedItems.value.length < 2 || selectedItems.value.find(item => item.id == img.id)) {
+                if (!selectedItems.value.find(item => item.id == img.id)) {
+                    selectedItems.value.push({
+                        id: img.id,
+                        name: img.getAttribute('name')
+                    });
+                }
+
+                element.classList.add('animate__animated', 'animate__flip');
+
+                element.addEventListener('animationend', () => {
+                    element.classList.remove('animate__animated', 'animate__flip');
+                });
+
+                setTimeout(() => {
+                    if (img.classList.contains('hide')) {
+                        img.classList.remove('hide');
+                    } else {
+                        selectedItems.value = selectedItems.value.filter(item => item.id != img.id);
+                        img.classList.add('hide');
+                    }
+                }, 100)
+            }
+
         }
 
         return {
@@ -84,6 +108,7 @@ const app = createApp({
             grid,
             grids,
             characters,
+            selectedItems,
 
             validateName,
             getCharacters,

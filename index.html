@@ -45,9 +45,9 @@
                     <div class="cards col-10 row q-gutter-md flex-center">
                         <transition-group appear enter-active-class="animate__animated animate__flip"
                             leave-active-class="animate__animated animate__flip">
-                            <q-card v-for="(item, idx) in characters" :key="idx" class="custom-card col-3"
-                                :data-id="item.id" @click="flipCard">
-                                <q-img :src="item.image"> </q-img>
+                            <q-card v-for="(item, idx) in characters" :key="idx"
+                                class="custom-card cursor-pointer bg-primary col-3" @click="flipCard">
+                                <q-img :src="item.image" class="img hide" :name="item.id" :id="idx"></q-img>
                             </q-card>
                         </transition-group>
                     </div>
