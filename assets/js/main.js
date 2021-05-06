@@ -21,6 +21,8 @@ const app = createApp({
                 value: '32'
             }
         ];
+        let selectedItems = [];
+        const excludedNames = [];
 
         const prompt = ref(true);
         const name = ref('');
@@ -28,7 +30,6 @@ const app = createApp({
         const count = ref(0);
         const time = ref(0.00);
         const characters = ref([]);
-        const selectedItems = ref([]);
 
 
         const validateName = value => {
@@ -77,17 +78,29 @@ const app = createApp({
         const flipCard = event => {
             const element = event.target;
             const img = element.closest('.img');
+            const imgName = img.getAttribute('name');
 
-            if (selectedItems.value.length < 2 || selectedItems.value.find(item => item.id == img.id)) {
-                if (!selectedItems.value.find(item => item.id == img.id)) {
-                    selectedItems.value.push({
-                        id: img.id,
-                        name: img.getAttribute('name')
-                    });
+            // Disable flip for finded characters
+            if (excludedNames.includes(imgName)) return false;
+
+            // Flip same card or max 2
+            if (selectedItems.length < 2 || selectedItems.find(item => item.id == img.id)) {
+                // If current is not selected
+                if (!selectedItems.find(item => item.id == img.id)) {
+                    // If current is equal to first selected item
+                    if (selectedItems.find(item => item.name == imgName)) {
+                        excludedNames.push(imgName);
+                        count.value++;
+                        selectedItems = [];
+                    } else {
+                        selectedItems.push({
+                            id: img.id,
+                            name: imgName
+                        });
+                    }
                 }
 
                 element.classList.add('animate__animated', 'animate__flip');
-
                 element.addEventListener('animationend', () => {
                     element.classList.remove('animate__animated', 'animate__flip');
                 });
@@ -96,7 +109,7 @@ const app = createApp({
                     if (img.classList.contains('hide')) {
                         img.classList.remove('hide');
                     } else {
-                        selectedItems.value = selectedItems.value.filter(item => item.id != img.id);
+                        selectedItems = selectedItems.filter(item => item.id != img.id);
                         img.classList.add('hide');
                     }
                 }, 100)
@@ -112,7 +125,6 @@ const app = createApp({
             time,
             grids,
             characters,
-            selectedItems,
 
             validateName,
             getCharacters,
