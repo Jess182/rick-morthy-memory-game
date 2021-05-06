@@ -27,3 +27,9 @@ body.body--dark {
 .hide {
     opacity: 0;
 }
+
+.fixed-top-center {
+    position: fixed;
+    top: 0;
+    right: calc(50vw + 20px);
+}

@@ -25,6 +25,8 @@ const app = createApp({
         const prompt = ref(true);
         const name = ref('');
         const grid = ref('8');
+        const count = ref(0);
+        const time = ref(0.00);
         const characters = ref([]);
         const selectedItems = ref([]);
 
@@ -106,6 +108,8 @@ const app = createApp({
             prompt,
             name,
             grid,
+            count,
+            time,
             grids,
             characters,
             selectedItems,
