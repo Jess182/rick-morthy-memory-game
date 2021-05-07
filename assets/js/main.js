@@ -1,8 +1,9 @@
 const {
     createApp,
+    onMounted,
     ref,
     reactive,
-    watch
+    watch,
 } = Vue;
 
 
@@ -22,23 +23,55 @@ const app = createApp({
                 value: '32'
             }
         ];
-        let selectedItems = [];
         const excludedNames = [];
+        let selectedItems = [];
         let timerId = null;
 
         const prompt = ref(true);
+        const confirm = ref(false);
         const name = ref('');
         const grid = ref('8');
         const count = ref(0);
         const time = ref(0.00);
         const characters = ref([]);
+        const history = ref([]);
+        const bestPlayer = ref(null);
 
+
+        onMounted(() => {
+            const localName = localStorage.getItem('memory-name');
+            if (localName) name.value = localName;
+        })
 
         watch(count, (currentValue, oldValue) => {
             if (currentValue == grid.value) {
                 clearInterval(timerId);
+
+                let board = localStorage.getItem('memory-board');
+                board = JSON.parse(board) || {};
+
+                if (!board[name.value]) board[name.value] = [];
+                board[name.value].push(time.value);
+
+                localStorage.setItem('memory-board', JSON.stringify(board));
+                history.value = board[name.value].reverse();
+
+                let bestBoardPlayer = null;
+                for (const player in board) {
+                    const bestTime = board[player].reduce((min, time) => min > time ? time : min);
+                    if (!bestBoardPlayer || bestTime < bestBoardPlayer.best_time) {
+                        bestBoardPlayer = {
+                            player,
+                            best_time: bestTime
+                        };
+                    }
+                }
+                console.log(bestBoardPlayer);
+                bestPlayer.value = bestBoardPlayer;
+                confirm.value = true;
             }
         });
+
 
         const validateName = value => {
             if (!value && name.value.trim().length == 0) prompt.value = true;
@@ -82,6 +115,8 @@ const app = createApp({
 
             characters.value = [...result.data.charactersByIds, ...result.data.charactersByIds]
                 .sort(() => .5 - Math.random());
+
+            localStorage.setItem('memory-name', name.value);
 
             timerId = setInterval(() => time.value++, 1000)
         };
@@ -128,18 +163,24 @@ const app = createApp({
 
         }
 
+        const reloadWindow = () => location.reload();
+
         return {
             prompt,
+            confirm,
             name,
             grid,
             count,
             time,
             grids,
             characters,
+            history,
+            bestPlayer,
 
             validateName,
             getCharacters,
             flipCard,
+            reloadWindow,
         }
     }
 });

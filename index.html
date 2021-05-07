@@ -41,6 +41,34 @@
                     </q-card>
                 </q-dialog>
 
+                <q-dialog v-model="confirm" persistent>
+                    <q-card class="q-pa-md">
+                        <q-card-section class="row items-center text-h6">
+                            <q-avatar icon="emoji_events" color="primary" text-color="white"></q-avatar>
+                            <span class="q-ml-md ">Congratulations you have made it in:</span>
+                            <span class="q-ml-sm  text-primary">{{ time }} sec.</span>
+                        </q-card-section>
+
+                        <q-card-section class="row items-center">
+                            <span class="text-h6">History: </span>
+                            <span class="text-subtitle1 q-ml-sm">{{ history }}</span>
+                        </q-card-section>
+
+                        <q-card-section class="row items-end">
+                            <span class="text-h6">Best time: </span>
+                            <span class="text-subtitle1 q-ml-sm text-yellow" v-if="bestPlayer">{{ bestPlayer.player
+                                }}</span>
+                            <span class="text-subtitle1 q-ml-sm text-red" v-if="bestPlayer">({{ bestPlayer.best_time
+                                }} sec.)</span>
+                        </q-card-section>
+
+                        <q-card-actions align="right" class="col-12">
+                            <q-btn flat label="Close" color="primary" v-close-popup></q-btn>
+                            <q-btn flat label="Restart" color="primary" @click="reloadWindow"></q-btn>
+                        </q-card-actions>
+                    </q-card>
+                </q-dialog>
+
                 <div class="fixed-top-left text-primary text-h6">{{ name }}</div>
                 <div class="fixed-top-center text-primary text-h6">{{ count }} / {{ grid }}</div>
                 <div class="fixed-top-right text-primary text-h6">{{ time }}</div>
