@@ -50,15 +50,16 @@ const app = createApp({
                 let board = localStorage.getItem('memory-board');
                 board = JSON.parse(board) || {};
 
-                if (!board[name.value]) board[name.value] = [];
-                board[name.value].push(time.value);
+                if (!board[name.value]) board[name.value] = {};
+                if (!board[name.value][grid.value]) board[name.value][grid.value] = [];
+                board[name.value][grid.value].push(time.value);
 
                 localStorage.setItem('memory-board', JSON.stringify(board));
-                history.value = board[name.value].reverse();
+                history.value = board[name.value][grid.value].reverse();
 
                 let bestBoardPlayer = null;
                 for (const player in board) {
-                    const bestTime = board[player].reduce((min, time) => min > time ? time : min);
+                    const bestTime = board[player][grid.value].reduce((min, time) => min > time ? time : min);
                     if (!bestBoardPlayer || bestTime < bestBoardPlayer.best_time) {
                         bestBoardPlayer = {
                             player,
@@ -66,7 +67,6 @@ const app = createApp({
                         };
                     }
                 }
-                console.log(bestBoardPlayer);
                 bestPlayer.value = bestBoardPlayer;
                 confirm.value = true;
             }
